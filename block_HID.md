@@ -1,7 +1,5 @@
     sudo vim /etc/modprobe.d/usbhid.conf
-	  
-      blacklist usbhid
-
+	  blacklist usbhid
     update-initramfs -u -k all
 
   commande pour débloquer (à exécuter en ssh)
