@@ -1,25 +1,25 @@
-sudo useradd -m -s /bin/bash kiosk
+	sudo useradd -m -s /bin/bash kiosk
 
-sudo apt install --no-install-recommends xorg openbox lightdm chromium pulseaudio vim
+	sudo apt install --no-install-recommends xorg openbox lightdm chromium pulseaudio vim
 
 (chromium-browser au lieu de chomium sur raspberry)
 
-sudo vim /etc/lightdm/lightdm.conf
+	sudo vim /etc/lightdm/lightdm.conf
 	
- 	autologin-user=kiosk
+ 		autologin-user=kiosk
 	
- 	xserver-command=X -bs -core -nocursor
+ 		xserver-command=X -bs -core -nocursor
  
  (désactivation du curseur à voir)
 
-sudo vim /etc/xdg/openbox/autostart
+	sudo vim /etc/xdg/openbox/autostart
 	
- 	xset -dpms
+ 		xset -dpms
 	
- 	xset s off
+ 		xset s off
 	
- 	chromium --kiosk {URL VOULUE}
+ 		chromium --kiosk {URL VOULUE}
 
 (encore une fois chromium-browser au lieu de chomium sur raspberry)
 
-sudo reboot
+	sudo reboot
