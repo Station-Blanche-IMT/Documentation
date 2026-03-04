@@ -1,3 +1,10 @@
+---
+title: Mode Kiosk
+layout: default
+parent: Système
+nav_order: 2
+---
+
 # Installation Mode Kiosk — Raspberry Pi (Station Blanche)
 
 **Cible :** Raspberry Pi 5 / Raspberry Pi OS Bookworm (Debian 13)

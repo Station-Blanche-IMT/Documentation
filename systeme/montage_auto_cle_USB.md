@@ -1,4 +1,9 @@
-Voici la traduction en français de votre documentation :
+---
+title: Montage automatique USB
+layout: default
+parent: Système
+nav_order: 5
+---
 
 # Guide de Configuration du Montage Automatique USB
 

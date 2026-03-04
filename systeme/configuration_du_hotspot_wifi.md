@@ -1,3 +1,10 @@
+---
+title: Hotspot Wi-Fi
+layout: default
+parent: Système
+nav_order: 3
+---
+
 # Configuration du point d'accès Wi-Fi (Hotspot)
 
 **Cible :** Raspberry Pi 5 / Raspberry Pi OS Bookworm

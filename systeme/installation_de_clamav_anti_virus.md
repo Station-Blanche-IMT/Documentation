@@ -1,3 +1,10 @@
+---
+title: ClamAV Anti-Virus
+layout: default
+parent: Système
+nav_order: 4
+---
+
 # Installation et Configuration de ClamAV
 
 **Cible :** Raspberry Pi 5 / Raspberry Pi OS Bookworm

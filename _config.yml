@@ -1,0 +1,32 @@
+title: Station Blanche — Documentation
+description: Documentation complète pour l'installation et la configuration de la Station Blanche
+theme: just-the-docs
+
+url: ""
+
+# Couleur du thème
+color_scheme: dark
+
+# Recherche activée
+search_enabled: true
+search.heading_level: 3
+search.previews: 3
+search.preview_words_before: 5
+search.preview_words_after: 10
+search.tokenizer_separator: /[\s/]+/
+
+# Navigation
+nav_sort: case_insensitive
+
+# Pied de page
+footer_content: "Station Blanche &mdash; Documentation technique"
+
+# Encodage
+encoding: "utf-8"
+
+# Exclure les fichiers inutiles du build
+exclude:
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - .github

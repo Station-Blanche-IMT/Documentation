@@ -1,3 +1,10 @@
+---
+title: Installation de la Station Blanche
+layout: default
+parent: Système
+nav_order: 1
+---
+
 # Installation de Raspberry Pi OS sur NVMe
 
 **Cible :** Raspberry Pi 5
