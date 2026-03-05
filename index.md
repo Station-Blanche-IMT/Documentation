@@ -40,3 +40,13 @@ Documentation complète de l'application Django.
 | [Référence technique](web/reference_technique) | Modèles BDD, routes URL et scripts utilitaires |
 | [Notes importantes](web/notes_importantes) | Points critiques pour la maintenance |
 | [Pistes d'amélioration](web/ameliorations) | Axes de travail futurs et commandes utiles |
+
+### Serveur SFTP
+{: .text-gamma }
+
+Installation et configuration du serveur de fichiers SFTP.
+
+| Document | Description |
+|:---------|:------------|
+| [Configuration du serveur SFTP](sftp_server/configuration_serveur) | Mise en place du serveur SFTP chrooté (Rocky/RHEL) |
+| [Configuration côté Station](sftp_server/configuration_station) | Montage SSHFS sur la Station Blanche |
