@@ -1,10 +1,3 @@
----
-title: Station Blanche Web
-layout: default
-parent: Application Web
-nav_order: 1
----
-
 # Documentation complète — Station Blanche Web
 
 > **Version :** Mars 2026
@@ -14,75 +7,29 @@ nav_order: 1
 
 ## Table des matières
 
-- [Documentation complète — Station Blanche Web](#documentation-complète--station-blanche-web)
-  - [Table des matières](#table-des-matières)
-  - [1. Présentation du projet](#1-présentation-du-projet)
-    - [Objectif principal](#objectif-principal)
-    - [Cas d'usage typique](#cas-dusage-typique)
-  - [2. Architecture technique](#2-architecture-technique)
-    - [Technologies utilisées](#technologies-utilisées)
-  - [3. Structure des fichiers](#3-structure-des-fichiers)
-  - [4. Installation \& déploiement](#4-installation--déploiement)
-    - [Prérequis](#prérequis)
-    - [Installation en développement](#installation-en-développement)
-    - [Déploiement en production](#déploiement-en-production)
-  - [5. Configuration](#5-configuration)
-    - [Fichier `sb_app/config/config.json`](#fichier-sb_appconfigconfigjson)
-    - [Fichier `sb_proj/settings.py` (extrait des paramètres importants)](#fichier-sb_projsettingspy-extrait-des-paramètres-importants)
-    - [Constantes dans `views.py`](#constantes-dans-viewspy)
-  - [6. Fonctionnalités détaillées](#6-fonctionnalités-détaillées)
-    - [6.1 Authentification \& contrôle d'accès](#61-authentification--contrôle-daccès)
-      - [Utilisateur standard (badge RFID)](#utilisateur-standard-badge-rfid)
-      - [Administrateur (PIN 8 chiffres)](#administrateur-pin-8-chiffres)
-      - [Décorateurs de protection](#décorateurs-de-protection)
-    - [6.2 Gestion des clés USB — Scan antivirus](#62-gestion-des-clés-usb--scan-antivirus)
-      - [Flux principal](#flux-principal)
-      - [Protection anti-NVMe](#protection-anti-nvme)
-    - [6.3 Copie de fichiers (USB \& serveur de fichiers)](#63-copie-de-fichiers-usb--serveur-de-fichiers)
-      - [Vers une clé USB cible](#vers-une-clé-usb-cible)
-      - [Vers le serveur de fichiers](#vers-le-serveur-de-fichiers)
-    - [6.4 Nettoyage de clé USB](#64-nettoyage-de-clé-usb)
-    - [6.5 Gestion des badges RFID](#65-gestion-des-badges-rfid)
-      - [Hub des badges](#hub-des-badges)
-      - [Ajout d'un badge (2 étapes)](#ajout-dun-badge-2-étapes)
-      - [Suppression d'un badge](#suppression-dun-badge)
-      - [Liste des badges](#liste-des-badges)
-    - [6.6 Mise à jour de la base ClamAV](#66-mise-à-jour-de-la-base-clamav)
-    - [6.7 Mode de sécurité](#67-mode-de-sécurité)
-    - [6.8 Gestion du PIN administrateur](#68-gestion-du-pin-administrateur)
-    - [6.9 Journaux (logs)](#69-journaux-logs)
-      - [Catégories de logs](#catégories-de-logs)
-      - [Niveaux de criticité](#niveaux-de-criticité)
-      - [Fuseau horaire](#fuseau-horaire)
-    - [6.10 Alimentation (arrêt / redémarrage)](#610-alimentation-arrêt--redémarrage)
-    - [6.11 Serveur de fichiers](#611-serveur-de-fichiers)
-      - [Vérification de santé](#vérification-de-santé)
-      - [Structure sur le serveur](#structure-sur-le-serveur)
-  - [7. Modèles de données (BDD)](#7-modèles-de-données-bdd)
-    - [Badge](#badge)
-    - [LogEntry](#logentry)
-  - [8. Routes URL](#8-routes-url)
-    - [Routes utilisateur](#routes-utilisateur)
-    - [Routes administrateur (nécessitent `superuser`)](#routes-administrateur-nécessitent-superuser)
-  - [9. Scripts utilitaires](#9-scripts-utilitaires)
-    - [`clamav_script.py`](#clamav_scriptpy)
-    - [`script_update_clamav.py`](#script_update_clamavpy)
-    - [`scripts.py`](#scriptspy)
-  - [10. Déploiement en production](#10-déploiement-en-production)
-    - [Service systemd (`station-blanche-web.service`)](#service-systemd-station-blanche-webservice)
-    - [Configuration Apache (`station-blanche-web.conf`)](#configuration-apache-station-blanche-webconf)
-    - [Permissions requises](#permissions-requises)
-  - [11. Choses importantes à savoir](#11-choses-importantes-à-savoir)
-    - [Sécurité des badges](#sécurité-des-badges)
-    - [Base ClamAV hors-ligne](#base-clamav-hors-ligne)
-    - [Gestion de la session](#gestion-de-la-session)
-    - [Copie temporaire](#copie-temporaire)
-    - [Utilisateurs Django](#utilisateurs-django)
-    - [Fuseau horaire](#fuseau-horaire-1)
-    - [Secret key Django](#secret-key-django)
-    - [Debug](#debug)
-  - [12. Pistes d'amélioration](#12-pistes-damélioration)
-  - [Annexe : Commandes utiles](#annexe--commandes-utiles)
+1. [Présentation du projet](#1-présentation-du-projet)
+2. [Architecture technique](#2-architecture-technique)
+3. [Structure des fichiers](#3-structure-des-fichiers)
+4. [Installation & déploiement](#4-installation--déploiement)
+5. [Configuration](#5-configuration)
+6. [Fonctionnalités détaillées](#6-fonctionnalités-détaillées)
+   - 6.1 [Authentification & contrôle d'accès](#61-authentification--contrôle-daccès)
+   - 6.2 [Gestion des clés USB — Scan antivirus](#62-gestion-des-clés-usb--scan-antivirus)
+   - 6.3 [Copie de fichiers (USB & serveur de fichiers)](#63-copie-de-fichiers-usb--serveur-de-fichiers)
+   - 6.4 [Nettoyage de clé USB](#64-nettoyage-de-clé-usb)
+   - 6.5 [Gestion des badges RFID](#65-gestion-des-badges-rfid)
+   - 6.6 [Mise à jour de la base ClamAV](#66-mise-à-jour-de-la-base-clamav)
+   - 6.7 [Mode de sécurité](#67-mode-de-sécurité)
+   - 6.8 [Gestion du PIN administrateur](#68-gestion-du-pin-administrateur)
+   - 6.9 [Journaux (logs)](#69-journaux-logs)
+   - 6.10 [Alimentation (arrêt / redémarrage)](#610-alimentation-arrêt--redémarrage)
+   - 6.11 [Serveur de fichiers](#611-serveur-de-fichiers)
+7. [Modèles de données (BDD)](#7-modèles-de-données-bdd)
+8. [Routes URL](#8-routes-url)
+9. [Scripts utilitaires](#9-scripts-utilitaires)
+10. [Déploiement en production](#10-déploiement-en-production)
+11. [Choses importantes à savoir](#11-choses-importantes-à-savoir)
+12. [Pistes d'amélioration](#12-pistes-damélioration)
 
 ---
 
@@ -102,7 +49,7 @@ Permettre à des utilisateurs authentifiés par badge RFID de :
 
 1. L'utilisateur scanne son badge RFID → connexion automatique
 2. Il insère une seule clé USB → détection automatique
-3. L'application copie le contenu dans un dossier temporaire `/tmp`
+3. L'application copie le contenu dans un dossier de staging sur disque (`/var/lib/station-blanche/staging/`)
 4. ClamAV analyse les fichiers
 5. Si des virus sont détectés : l'utilisateur choisit de supprimer ou d'ignorer
 6. Les fichiers sains sont copiés vers une clé USB cible ou vers le serveur de fichiers
@@ -342,6 +289,12 @@ Ce fichier JSON stocke la configuration dynamique de l'application :
 | `FILESERVER_HEALTH_DIR`| `"/mnt/fileshare/health_check/files"`| Dossier de test de santé fileserver       |
 | `FILESERVER_IP`        | `"159.31.247.100"`                  | Adresse IP du serveur de fichiers          |
 
+### Constantes dans `scripts.py`
+
+| Constante              | Valeur                                      | Description                                             |
+|------------------------|---------------------------------------------|---------------------------------------------------------|
+| `STAGING_DIR`          | `"/var/lib/station-blanche/staging"`         | Répertoire de staging sur disque (NVMe) pour les scans  |
+
 ---
 
 ## 6. Fonctionnalités détaillées
@@ -373,7 +326,7 @@ L'application utilise **deux niveaux d'authentification** :
 #### Flux principal
 1. **Détection USB** (`scripts.lister_cles_usb()`) : utilise `lsblk -J` pour lister les périphériques USB montés
 2. **Condition :** exactement 1 clé USB doit être insérée et la base ClamAV doit être présente
-3. **Copie vers /tmp** (`scripts.copier_contenu_cle()`) : copie intégrale de la clé dans `/tmp/<nom-montage>`
+3. **Copie vers le staging** (`scripts.copier_contenu_cle()`) : copie intégrale de la clé dans `/var/lib/station-blanche/staging/<nom-montage>` (sur le disque NVMe, pas en RAM)
 4. **Scan ClamAV** (`clamav_script.run_scan()`) : analyse avec `clamscan -r` en utilisant la base locale `clamav_database/`
 5. **Résultat :**
    - 0 virus → redirection vers la page de copie
@@ -403,8 +356,8 @@ Après le scan, l'utilisateur peut copier les fichiers vers :
 ### 6.4 Nettoyage de clé USB
 
 - **URL :** `/process_key_cleanup`
-- Copie la clé dans `/tmp`, lance un scan, puis propose de supprimer les fichiers infectés
-- Les fichiers sont supprimés à la fois dans la copie `/tmp` ET sur la clé USB source
+- Copie la clé dans le répertoire de staging sur disque, lance un scan, puis propose de supprimer les fichiers infectés
+- Les fichiers sont supprimés à la fois dans la copie staging ET sur la clé USB source
 - Utilise `scripts.delete_files()` qui parcourt récursivement le dossier
 
 ### 6.5 Gestion des badges RFID
@@ -560,7 +513,7 @@ La fonction `check_fileserver()` vérifie :
 | `/standard_login/`         | GET, POST  | `standard_user_process`      | Connexion par badge RFID                 |
 | `/pin/`                    | GET, POST  | `entree_pin`                 | Connexion admin par PIN                  |
 | `/logout/`                 | GET        | `disconnect_user`            | Déconnexion                              |
-| `/process_key_to_tmp/`     | POST       | `process_key_to_tmp`         | Lance scan + copie vers /tmp             |
+| `/process_key_to_tmp/`     | POST       | `process_key_to_tmp`         | Lance scan + copie vers staging (disque) |
 | `/copy_key_to_tmp/`        | GET        | `copy_key_to_tmp_view`       | Choix de la destination (clé/serveur)    |
 | `/copy_tmp_to_key/`        | POST       | `copy_tmp_to_key_view`       | Copie vers clé(s) USB cible(s)           |
 | `/copy_tmp_to_fileserver/` | POST       | `copy_tmp_to_fileserver_view`| Copie vers serveur de fichiers           |
@@ -607,7 +560,7 @@ La fonction `check_fileserver()` vérifie :
 
 ### `scripts.py`
 - **`lister_cles_usb()`** : Liste les clés USB avec taille, point de montage, etc.
-- **`copier_contenu_cle(device, mount)`** : Copie le contenu d'une clé vers `/tmp`
+- **`copier_contenu_cle(device, mount)`** : Copie le contenu d'une clé vers le répertoire de staging sur disque (`/var/lib/station-blanche/staging/`)
 - **`copier_dossier_sur_usb(source, mount, mode)`** : Copie vers une clé USB cible
 - **`copier_dossier_sur_fileserver(source, badge_name)`** : Copie vers le serveur de fichiers
 - **`clear_mount_point(mount)`** : Vide une clé USB (mode maximum) avec protection anti-NVMe
@@ -633,8 +586,7 @@ La fonction `check_fileserver()` vérifie :
   - `sudo systemctl poweroff`
   - `sudo systemctl reboot`
   - Lecture/écriture sur `/mnt/fileshare/`
-  - Lecture des périphériques USB (`lsblk`, montage)
-- La BDD SQLite doit être accessible en écriture : `chmod 664 db.sqlite3`
+  - Lecture des périphériques USB (`lsblk`, montage)  - Lecture/écriture sur `/var/lib/station-blanche/staging/` (répertoire de staging pour les scans)- La BDD SQLite doit être accessible en écriture : `chmod 664 db.sqlite3`
 - Le dossier de logs : `chmod -R 775 sb_app/logs/`
 
 ---
@@ -655,10 +607,12 @@ La fonction `check_fileserver()` vérifie :
 - Données stockées en session : `key_name`, `key_mount`, `folder`, `badge_user_name`, `scan_result`, `scan_virus`, `malicious_files_list`, `badge_add_step`, `badge_add_name`
 - La session est vidée à la déconnexion (`request.session.flush()`)
 
-### Copie temporaire
-- Les fichiers sont d'abord copiés dans `/tmp` avant le scan
-- Le dossier temporaire est nettoyé (`shutil.rmtree`) après la copie vers la destination finale
-- **Attention :** si l'utilisateur quitte le flux en cours de route, le dossier `/tmp` peut rester. Pas de nettoyage automatique en cas d'abandon.
+### Copie temporaire (staging)
+- Les fichiers sont d'abord copiés dans `/var/lib/station-blanche/staging/` (sur le disque NVMe) avant le scan
+- **Pourquoi pas `/tmp` ?** Sur ce système, `/tmp` est un tmpfs (système de fichiers en RAM). Copier une clé USB de 16+ Go dans `/tmp` saturerait les 8 Go de RAM et provoquerait un crash OOM (Out Of Memory)
+- Le répertoire de staging est sur le disque NVMe (441 Go disponibles), ce qui permet de traiter des clés USB de grande capacité sans impacter la RAM
+- Le dossier de staging est nettoyé (`shutil.rmtree`) après la copie vers la destination finale
+- **Attention :** si l'utilisateur quitte le flux en cours de route, le dossier de staging peut rester. Pas de nettoyage automatique en cas d'abandon.
 
 ### Utilisateurs Django
 - `admin` (superuser) : créé via `createsuperuser`, utilisé pour l'authentification PIN
@@ -684,7 +638,7 @@ La fonction `check_fileserver()` vérifie :
 
 Voici des axes de travail suggérés pour les futures équipes :
 
-1. **Nettoyage automatique de `/tmp`** : Implémenter un mécanisme (middleware ou tâche périodique) pour supprimer les dossiers temporaires orphelins
+1. **Nettoyage automatique du staging** : Implémenter un mécanisme (middleware ou tâche périodique) pour supprimer les dossiers orphelins dans `/var/lib/station-blanche/staging/`
 
 2. **Pagination des logs** : Actuellement limités à 200/500 entrées — ajouter une pagination côté serveur et des filtres (par date, catégorie, niveau)
 
