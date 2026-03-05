@@ -70,6 +70,7 @@ station-blanche-web/
                 ├── entree_pin.html            # Saisie PIN admin
                 ├── config.html                # (non utilisé actuellement)
                 ├── change_pin.html            # Changement PIN
+                ├── copy_in_progress.html      # Page de progression (barre + stats)
                 ├── error.html                 # Page d'erreur applicative
                 ├── logs.html                  # Affichage logs (utilisateur)
                 ├── protected.html             # Hub admin (6 tuiles)

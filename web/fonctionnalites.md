@@ -46,10 +46,24 @@ L'application utilise **deux niveaux d'authentification** :
 1. **Détection USB** (`scripts.lister_cles_usb()`) : utilise `lsblk -J` pour lister les périphériques USB montés
 2. **Condition :** exactement 1 clé USB doit être insérée et la base ClamAV doit être présente
 3. **Copie vers le staging** (`scripts.copier_contenu_cle()`) : copie intégrale de la clé dans `/var/lib/station-blanche/staging/<nom-montage>` (sur le disque NVMe, pas en RAM)
-4. **Scan ClamAV** (`clamav_script.run_scan()`) : analyse avec `clamscan -r` en utilisant la base locale `clamav_database/`
+4. **Scan ClamAV** (`clamav_script.run_scan()`) : analyse avec `clamdscan` en utilisant le démon `clamd` et la base locale `clamav_database/`
 5. **Résultat :**
    - 0 virus → redirection vers la page de copie
    - N virus → page d'action sur les fichiers infectés
+
+### Copie et scan asynchrones avec barre de progression
+
+La copie USB → staging et le scan ClamAV sont exécutés **en arrière-plan** dans un thread dédié. L'utilisateur est redirigé vers une **page de progression** (`/copy_in_progress/`) qui affiche :
+
+- Une **barre de progression en temps réel** basée sur les octets copiés (par blocs de 1 Mo)
+- Le **label de l'étape en cours** (ex : « Copie USB → Station Blanche » puis « Analyse antivirus en cours… »)
+- Les **statistiques** : octets copiés / total, pourcentage, données restantes
+- Un **chronomètre** du temps écoulé
+
+La navigation est **bloquée** pendant l'opération (liens désactivés, bouton retour neutralisé, avertissement si l'utilisateur tente de fermer l'onglet). À la fin du scan, la page redirige automatiquement vers les résultats.
+
+> **Technique :** Le suivi de progression utilise un dictionnaire en mémoire (`_copy_tasks`) partagé entre threads. Cela impose un Gunicorn configuré avec **1 seul worker** et plusieurs threads (voir notes importantes).
+{: .note }
 
 ### Protection anti-NVMe
 Le script vérifie que le périphérique n'est pas un disque NVMe pour empêcher toute opération accidentelle sur le disque système.
@@ -66,13 +80,36 @@ Après le scan, l'utilisateur peut copier les fichiers vers :
 - Les fichiers sont copiés dans un dossier nommé `analyse_JJ_MM_AA_IDXX` (ID auto-incrémenté)
 - En mode **maximum** : la clé cible est vidée avant la copie
 - En mode **limited** : la copie s'ajoute au contenu existant
-- `os.sync()` est appelé après la copie pour forcer l'écriture sur le disque
+- La copie s'exécute **en arrière-plan** avec une barre de progression en temps réel
+- Pour les clés multiples, l'étape affichée indique « Copie vers clé USB 1/3 (label) » et le compteur se réinitialise pour chaque clé
+
+#### Synchronisation et cache d'écriture Linux
+
+Lors de la copie vers USB, Linux bufferise les écritures en RAM (cache « dirty pages ») avant de les écrire physiquement sur la clé. Pour des fichiers volumineux, cela signifie que la copie applicative peut terminer bien avant que les données soient réellement sur le support.
+
+Après la copie de chaque clé, l'application effectue une **phase de synchronisation** :
+1. Appel système `sync` pour forcer l'écriture des pages sales
+2. Surveillance de `/proc/meminfo` (champ `Dirty:`) toutes les 0,5 secondes
+3. La barre de progression montre l'avancement du flush (ex : « Écriture sur clé USB 2/3 (label) »)
+4. La synchronisation est considérée terminée quand les dirty pages passent sous 1 Mo
 
 ### Vers le serveur de fichiers
 - **URL :** `/copy_tmp_to_fileserver/`
 - Les fichiers sont copiés vers `/mnt/fileshare/<nom_badge>/files/analyse_JJ_MM_AA_IDXX`
 - Le dossier de l'utilisateur doit pré-exister sur le serveur (sinon erreur)
 - Vérification préalable de l'accessibilité du serveur (ping + test d'écriture)
+- La copie s'exécute **en arrière-plan** avec une barre de progression en temps réel
+
+### Page de progression (`/copy_in_progress/`)
+
+Toutes les opérations longues (copie USB→staging, scan ClamAV, copie vers clé cible, copie vers serveur) utilisent la même page de progression :
+
+- **Barre de progression** : indéterminée au départ, puis pourcentage précis dès que la taille totale est connue
+- **Statistiques** : octets copiés / total, pourcentage, données restantes (format Mo/Go)
+- **Label d'étape dynamique** : s'adapte à l'opération en cours
+- **Blocage de la navigation** : liens et boutons du header désactivés, `beforeunload` empêche la fermeture, bouton retour neutralisé
+- **Redirection automatique** : vers la page de résultats une fois l'opération terminée
+- **Polling JSON** : la page interroge `/copy_status/` toutes les 1,5 secondes pour mettre à jour l'affichage
 
 ---
 

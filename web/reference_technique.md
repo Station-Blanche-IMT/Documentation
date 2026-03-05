@@ -56,6 +56,8 @@ Modèles de données, routes URL et scripts utilitaires.
 | `/copy_key_to_tmp/`        | GET        | `copy_key_to_tmp_view`       | Choix de la destination (clé/serveur)    |
 | `/copy_tmp_to_key/`        | POST       | `copy_tmp_to_key_view`       | Copie vers clé(s) USB cible(s)           |
 | `/copy_tmp_to_fileserver/` | POST       | `copy_tmp_to_fileserver_view`| Copie vers serveur de fichiers           |
+| `/copy_in_progress/`       | GET        | `copy_in_progress_view`      | Page de progression (barre + stats)      |
+| `/copy_status/`            | GET (JSON) | `copy_status_view`           | Statut de la copie en cours (polling)    |
 | `/virus_action/`           | GET, POST  | `virus_action_view`          | Action sur fichiers infectés             |
 | `/process_key_cleanup`     | POST       | `process_key_cleanup`        | Lance nettoyage USB                      |
 | `/usb_cleanup_midstep`     | GET        | `usb_cleanup_midstep_view`   | Étape intermédiaire nettoyage            |
@@ -99,9 +101,9 @@ Modèles de données, routes URL et scripts utilitaires.
 
 ### `scripts.py`
 - **`lister_cles_usb()`** : Liste les clés USB avec taille, point de montage, etc.
-- **`copier_contenu_cle(device, mount)`** : Copie le contenu d'une clé vers le répertoire de staging sur disque (`/var/lib/station-blanche/staging/`)
-- **`copier_dossier_sur_usb(source, mount, mode)`** : Copie vers une clé USB cible
-- **`copier_dossier_sur_fileserver(source, badge_name)`** : Copie vers le serveur de fichiers
+- **`copier_contenu_cle(device, mount, copy_function=None)`** : Copie le contenu d'une clé vers le répertoire de staging sur disque (`/var/lib/station-blanche/staging/`). Le paramètre optionnel `copy_function` permet de substituer la copie standard (`shutil.copy2`) par une fonction de copie avec suivi par blocs de 1 Mo.
+- **`copier_dossier_sur_usb(source, mount, mode, ..., copy_function=None, skip_sync=False)`** : Copie vers une clé USB cible. `skip_sync=True` désactive l'appel à `os.sync()` (utilisé quand la synchronisation est gérée séparément via la surveillance des dirty pages).
+- **`copier_dossier_sur_fileserver(source, badge_name, ..., copy_function=None)`** : Copie vers le serveur de fichiers
 - **`clear_mount_point(mount)`** : Vide une clé USB (mode maximum) avec protection anti-NVMe
 - **`delete_files(fichiers, dossier)`** : Supprime récursivement des fichiers par nom
 - **`is_nvme_device(mount)`** : Vérifie si un point de montage est sur un NVMe

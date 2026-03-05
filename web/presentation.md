@@ -75,7 +75,7 @@ ClamAV    lsblk/parted   ← Outils système
 | Serveur WSGI      | Gunicorn 23.0.0                     |
 | Reverse proxy     | Apache2 (mod_proxy, mod_proxy_http) |
 | Base de données   | SQLite3                             |
-| Antivirus         | ClamAV (clamscan, base hors-ligne)  |
+| Antivirus         | ClamAV (clamdscan, base hors-ligne) |
 | Gestion USB       | lsblk, pyparted, psutil            |
 | Authentification  | Badges RFID (hashés PBKDF2)         |
 | OS cible          | Linux (Debian/Ubuntu)               |

@@ -92,6 +92,10 @@ Le fichier `station-blanche-web.service` configure Gunicorn comme service systè
 - **Chemin du venv :** `/home/kiosk/station-blanche-web/.venv`
 - **Répertoire de travail :** `/home/kiosk/station-blanche-web/sb_proj`
 - **Port :** 8000 (interne uniquement)
+- **Workers/Threads :** `--workers 1 --threads 4`
+
+> **Important :** Gunicorn doit être configuré avec **1 seul worker** et plusieurs threads. Le suivi de progression des copies utilise un dictionnaire en mémoire partagé entre threads. Avec plusieurs workers (= processus séparés), chaque worker aurait sa propre copie du dictionnaire et la barre de progression ne fonctionnerait pas.
+{: .warning }
 
 ---
 
@@ -101,6 +105,10 @@ Le fichier `station-blanche-web.conf` configure le reverse proxy :
 
 - Reverse proxy HTTP sur le port 80 → Gunicorn sur le port 8000
 - Pages d'erreur personnalisées (`error-pages/error.html`)
+- `ProxyTimeout 86400` et `Timeout 86400` pour éviter les erreurs « Proxy Error » lors des copies longues
+
+> **Note :** la directive `Timeout` d'Apache (timeout général du serveur) doit être augmentée en plus de `ProxyTimeout`. Par défaut, `Timeout` vaut 300 secondes et coupe la connexion avant `ProxyTimeout` si celui-ci est plus élevé.
+{: .note }
 
 ---
 
@@ -112,6 +120,10 @@ L'utilisateur système (ex: `kiosk`) doit pouvoir exécuter :
 - Lecture/écriture sur `/mnt/fileshare/`
 - Lecture des périphériques USB (`lsblk`, montage)
 - Lecture/écriture sur `/var/lib/station-blanche/staging/` (répertoire de staging pour les scans)
+
+Permissions requises sur le répertoire de staging :
+- Le dossier `/var/lib/station-blanche/staging/` doit avoir les permissions **755** (`chmod 755`) pour que le démon ClamAV (`clamav` user) puisse lire les fichiers à scanner
+- L'application crée le dossier avec `mode=0o755` automatiquement
 
 Fichiers nécessitant des permissions spécifiques :
 - La BDD SQLite : `chmod 664 db.sqlite3`
