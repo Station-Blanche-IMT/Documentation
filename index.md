@@ -32,4 +32,11 @@ Documentation complète de l'application Django.
 
 | Document | Description |
 |:---------|:------------|
-| [Station Blanche Web](web/documentation) | Documentation complète de l'application web Django |
+| [Présentation & Architecture](web/presentation) | Vue d'ensemble du projet et stack technique |
+| [Structure des fichiers](web/structure_fichiers) | Arborescence complète du projet Django |
+| [Installation & Déploiement](web/installation) | Setup dev / prod et script de déploiement |
+| [Configuration](web/configuration) | Fichiers de config, constantes et paramètres |
+| [Fonctionnalités](web/fonctionnalites) | Authentification, scan USB, copie, badges, logs… |
+| [Référence technique](web/reference_technique) | Modèles BDD, routes URL et scripts utilitaires |
+| [Notes importantes](web/notes_importantes) | Points critiques pour la maintenance |
+| [Pistes d'amélioration](web/ameliorations) | Axes de travail futurs et commandes utiles |
