@@ -50,3 +50,12 @@ Installation et configuration du serveur de fichiers SFTP.
 |:---------|:------------|
 | [Configuration du serveur SFTP](sftp_server/configuration_serveur) | Mise en place du serveur SFTP chrooté (Rocky/RHEL) |
 | [Configuration côté Station](sftp_server/configuration_station) | Montage SSHFS sur la Station Blanche |
+
+### Boîtier 3D
+{: .text-gamma }
+
+Design du boîtier imprimé en 3D pour la Station Blanche.
+
+| Document | Description |
+|:---------|:------------|
+| [Boîtier 3D](boitier_3D/) | Pièces 3D conçues avec OnShape |
